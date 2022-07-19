@@ -1,3 +1,4 @@
+from random import randint
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -7,12 +8,11 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
 DELAY = 5
 URL = "https://www.youtube.com"
 XPATHS = {
     'ACCEPT_COOKIES' : '//*[@id="content"]/div[2]/div[6]/div[1]/ytd-button-renderer[2]',
-    'SEARCH_BAR' : ''
+    'SEARCH_BAR' : '//*[@id="search"]'
 }
 
 def wait_for_elem(driver, xpath):
@@ -34,7 +34,28 @@ def main():
         print('Failed to accept cookies')
         driver.quit()
         exit()
-
+    # search
+    current_page = driver.current_url
+    while True:
+        try:
+            # find element using css selector
+            links = driver.find_elements(By.XPATH, '//*[@id="content"]')
+            rand_number = randint(0, len(links) - 1)
+            # create a list and chose a random link
+            l = links[rand_number]
+            # click link
+            l.click()
+            # check link
+            new_page = driver.current_url
+            # if link is the same, keep looping
+            if new_page == current_page:
+                continue
+            else:
+                # break loop if you are in a new url
+                break
+        except:
+            continue
+    
 if __name__ == '__main__':
     main()
 
