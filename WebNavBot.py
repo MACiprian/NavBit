@@ -12,7 +12,6 @@ DELAY = 5
 URL = "https://www.youtube.com"
 XPATHS = {
     'ACCEPT_COOKIES' : '//*[@id="content"]/div[2]/div[6]/div[1]/ytd-button-renderer[2]',
-    'SEARCH_BAR' : '//*[@id="search"]'
 }
 
 def wait_for_elem(driver, xpath):
@@ -34,7 +33,7 @@ def main():
         print('Failed to accept cookies')
         driver.quit()
         exit()
-    # search
+    # search for random video
     current_page = driver.current_url
     while True:
         try:
@@ -55,7 +54,14 @@ def main():
                 break
         except:
             continue
-    
+    # skip ads
+    while True:
+        try:
+            skip = driver.find_element(By.CLASS_NAME, 'ytp-ad-skip-button-container')
+            skip.click()
+        except:
+            continue
+
 if __name__ == '__main__':
     main()
-
+    
